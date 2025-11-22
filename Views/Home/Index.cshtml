@@ -1,60 +1,184 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Home";
 }
 
-<div class="container mt-4">
-    <!-- Hero Section -->
-    <div class="p-5 mb-4 bg-primary text-white rounded-4 shadow-sm text-center">
-        <h1 class="fw-bold">Latest Trending Electronic Items</h1>
-        <p>Find headphones, smartwatches, cameras, and more at the best prices.</p>
-        <a href="#" class="btn btn-light px-4 py-2">Shop Now</a>
-    </div>
-
-    <!-- Category Section -->
-    <h2 class="fw-semibold mb-4">Shop by Category</h2>
-    <div class="row text-center">
-        <div class="col-6 col-md-3 mb-4">
-            <div class="card shadow-sm border-0">
-                <img src="/images/headphones.jpg" class="card-img-top" alt="Headphones">
-                <div class="card-body"><h6>Headphones</h6></div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3 mb-4">
-            <div class="card shadow-sm border-0">
-                <img src="/images/phones.jpg" class="card-img-top" alt="Phones">
-                <div class="card-body"><h6>Smartphones</h6></div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3 mb-4">
-            <div class="card shadow-sm border-0">
-                <img src="/images/cameras.jpg" class="card-img-top" alt="Cameras">
-                <div class="card-body"><h6>Cameras</h6></div>
-            </div>
-        </div>
-        <div class="col-6 col-md-3 mb-4">
-            <div class="card shadow-sm border-0">
-                <img src="/images/watches.jpg" class="card-img-top" alt="Watches">
-                <div class="card-body"><h6>Watches</h6></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Featured Products -->
-    <h2 class="fw-semibold mb-4">Featured Products</h2>
-    <div class="row">
-        @for (int i = 1; i <= 8; i++)
-        {
-            <div class="col-6 col-md-3 mb-4">
-                <div class="card h-100 shadow-sm border-0">
-                    <img src="/css/product.png" class="card-img-top" alt="Product @(i)">
-                    <div class="card-body text-center">
-                        <h6 class="card-title">Product @(i)</h6>
-                        <p class="text-muted mb-2">$@(50 + i * 10)</p>
-                        <a href="/Home/Product" class="btn btn-outline-primary btn-sm">View</a>
+<section class="section-main padding-y mb-4 mt-3">
+    <div class="container">
+        <div class="card card-banner-main p-3">
+            <div class="row g-0">
+                <aside class="col-lg-3 d-none d-lg-block border-end">
+                    <ul class="nav flex-column gap-1 p-2">
+                        <li class="nav-item"><a href="#" class="nav-link text-dark bg-light rounded">Automobiles</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link text-muted">Clothes and wear</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link text-muted">Home interiors</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link text-muted">Computer and tech</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link text-muted">Tools, equipments</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link text-muted">Sports and outdoor</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link text-muted">Machinery, tools</a></li>
+                        <li class="nav-item"><a href="#" class="nav-link text-muted">More category</a></li>
+                    </ul>
+                </aside>
+                <div class="col-lg-9 ps-lg-3">
+                    <div class="card-banner h-100" style="background-image: url('https://via.placeholder.com/1000x400/cce5ff/000000'); background-position: center;">
+                        <div class="p-5" style="max-width: 400px;">
+                            <h3 class="display-6 mb-3">Latest trending <br> <strong>Electronic items</strong></h3>
+                            <button class="btn btn-light shadow-sm">Learn more</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        }
+        </div>
     </div>
-</div>
+</section>
+
+<section class="padding-y mb-4">
+    <div class="container">
+        <div class="card card-deal">
+            <div class="row g-0">
+                <div class="col-lg-3 col-md-12 border-end p-3">
+                    <h5 class="fw-bold">Deals and offers</h5>
+                    <p class="text-muted">Hygiene equipments</p>
+                    <div class="d-flex gap-2 mb-3">
+                        <div class="timer-box"><span class="fw-bold">04</span><span class="timer-label">Days</span></div>
+                        <div class="timer-box"><span class="fw-bold">13</span><span class="timer-label">Hour</span></div>
+                        <div class="timer-box"><span class="fw-bold">34</span><span class="timer-label">Min</span></div>
+                        <div class="timer-box"><span class="fw-bold">56</span><span class="timer-label">Sec</span></div>
+                    </div>
+                </div>
+                <div class="col-lg-9 col-md-12">
+                    <div class="row g-0 h-100">
+                        <div class="col text-center p-3 border-end">
+                            <img src="https://via.placeholder.com/120" class="mb-2" style="height: 120px; object-fit: contain;">
+                            <p class="small mb-1">Smart watches</p>
+                            <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger">-25%</span>
+                        </div>
+                        <div class="col text-center p-3 border-end">
+                            <img src="https://via.placeholder.com/120" class="mb-2" style="height: 120px; object-fit: contain;">
+                            <p class="small mb-1">Laptops</p>
+                            <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger">-15%</span>
+                        </div>
+                        <div class="col text-center p-3 border-end">
+                            <img src="https://via.placeholder.com/120" class="mb-2" style="height: 120px; object-fit: contain;">
+                            <p class="small mb-1">GoPro cameras</p>
+                            <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger">-40%</span>
+                        </div>
+                        <div class="col text-center p-3 border-end">
+                            <img src="https://via.placeholder.com/120" class="mb-2" style="height: 120px; object-fit: contain;">
+                            <p class="small mb-1">Headphones</p>
+                            <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger">-25%</span>
+                        </div>
+                        <div class="col text-center p-3">
+                            <img src="https://via.placeholder.com/120" class="mb-2" style="height: 120px; object-fit: contain;">
+                            <p class="small mb-1">Canon cameras</p>
+                            <span class="badge rounded-pill bg-danger bg-opacity-10 text-danger">-25%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="padding-y mb-4">
+    <div class="container">
+        <div class="block-section">
+            <div class="row g-0">
+                <div class="col-lg-3 col-md-4 aside-text" style="background-image: url('https://via.placeholder.com/300x600/fff8e1/000');">
+                    <h4 class="mb-3" style="max-width: 150px;">Home and outdoor</h4>
+                    <button class="btn btn-light btn-sm fw-bold shadow-sm">Source now</button>
+                </div>
+                <div class="col-lg-9 col-md-8">
+                    <div class="row g-0">
+                        @for (int i = 0; i < 8; i++)
+                        {
+                            <div class="col-lg-3 col-md-4 col-6 item-sm d-flex align-items-center justify-content-between">
+                                <div class="text-start">
+                                    <h6 class="small mb-0">Product Name</h6>
+                                    <span class="text-muted small">From USD 19</span>
+                                </div>
+                                <img src="https://via.placeholder.com/60" alt="item">
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="padding-y mb-4">
+    <div class="container">
+        <div class="bg-blue-gradient rounded p-4 p-lg-5 position-relative overflow-hidden">
+            <div class="row position-relative z-index-10">
+                <div class="col-lg-6 mb-4 mb-lg-0 text-white">
+                    <h3 class="mb-3 display-6 fw-bold">An easy way to send <br> requests to all suppliers</h3>
+                    <p class="opacity-75">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-quote shadow">
+                        <h5 class="mb-3">Send quote to suppliers</h5>
+                        <form>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" placeholder="What item you need?">
+                            </div>
+                            <div class="mb-3">
+                                <textarea class="form-control" rows="3" placeholder="Type more details"></textarea>
+                            </div>
+                            <div class="d-flex gap-2 mb-3">
+                                <input type="number" class="form-control" placeholder="Quantity">
+                                <select class="form-select" style="width: 100px;">
+                                    <option>Pcs</option>
+                                    <option>Kg</option>
+                                </select>
+                            </div>
+                            <button type="button" class="btn btn-primary">Send inquiry</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="padding-y mb-5">
+    <div class="container">
+        <h4 class="fw-bold mb-3">Recommended items</h4>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-3">
+            @for (int i = 0; i < 10; i++)
+            {
+                <div class="col">
+                    <div class="card h-100 border hover-shadow">
+                        <div class="p-3 text-center">
+                            <img src="https://via.placeholder.com/150" class="img-fluid" style="height: 150px; object-fit: contain;">
+                        </div>
+                        <div class="card-body pt-0">
+                            <h6 class="fw-bold mb-1">$10.30</h6>
+                            <p class="text-muted small mb-0 text-truncate">T-shirts with multiple colors, for men</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="padding-y mb-5">
+    <div class="container">
+        <h4 class="fw-bold mb-3">Our extra services</h4>
+        <div class="row g-3">
+            <div class="col-lg-3 col-md-6">
+                <div class="card border-0 bg-white">
+                    <div class="position-relative">
+                        <img src="https://via.placeholder.com/400x200" class="card-img-top filter-dark" style="height: 140px; object-fit: cover;">
+                        <div class="position-absolute bottom-0 end-0 p-3">
+                            <div class="icon-circle shadow"><i class="bi bi-search"></i></div>
+                        </div>
+                    </div>
+                    <div class="card-body border rounded-bottom">
+                        <h6 class="fw-bold mx-auto" style="max-width: 150px;">Source from Industry Hubs</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

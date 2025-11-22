@@ -1,3 +1,5 @@
+using ShopHub.Services;
+
 namespace ShopHub
 {
     public class Program
@@ -8,6 +10,7 @@ namespace ShopHub
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddSingleton<MongoDbService>();
 
             var app = builder.Build();
 

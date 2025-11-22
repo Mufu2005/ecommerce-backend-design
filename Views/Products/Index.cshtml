@@ -1,0 +1,151 @@
+﻿@model IEnumerable<ShopHub.Models.ProductViewModel>
+
+@{
+    ViewData["Title"] = "Shop";
+}
+
+<div class="bg-white py-3 border-bottom mb-4">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0 small">
+                <li class="breadcrumb-item"><a href="/" class="text-muted">Home</a></li>
+                <li class="breadcrumb-item"><a href="#" class="text-muted">Clothings</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Men's wear</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <aside class="col-lg-3 pe-lg-4 mb-4 mb-lg-0">
+            <div class="filter-group">
+                <button class="card-header w-100" data-bs-toggle="collapse" data-bs-target="#collapseCat">
+                    Category <i class="bi bi-chevron-down"></i>
+                </button>
+                <div class="collapse show mt-3" id="collapseCat">
+                    <ul class="list-unstyled small text-muted d-flex flex-column gap-2">
+                        <li><a href="#" class="text-muted fw-bold">Mobile accessory</a></li>
+                        <li><a href="#" class="text-muted">Electronics</a></li>
+                        <li><a href="#" class="text-muted">Smartphones</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <button class="card-header w-100" data-bs-toggle="collapse" data-bs-target="#collapseBrand">
+                    Brands <i class="bi bi-chevron-down"></i>
+                </button>
+                <div class="collapse show mt-3" id="collapseBrand">
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" checked id="brand1">
+                        <label class="form-check-label small" for="brand1">Samsung</label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="brand2">
+                        <label class="form-check-label small" for="brand2">Apple</label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="brand3">
+                        <label class="form-check-label small" for="brand3">Huawei</label>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+
+        <main class="col-lg-9">
+            <div class="card mb-4 border-brand-border-color">
+                <div class="card-body py-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <span class="small text-muted">12,911 items in <strong>Mobile accessory</strong></span>
+                    <div class="d-flex align-items-center gap-2">
+                        <div class="form-check mb-0 small me-2">
+                            <input class="form-check-input" type="checkbox" id="verified">
+                            <label class="form-check-label" for="verified">Verified only</label>
+                        </div>
+                        <select class="form-select form-select-sm" style="width: auto;">
+                            <option selected>Featured</option>
+                            <option>Price: Low to High</option>
+                        </select>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-light border btn-sm active"><i class="bi bi-grid-fill"></i></button>
+                            <button type="button" class="btn btn-light border btn-sm text-muted"><i class="bi bi-list-ul"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4 d-flex flex-wrap gap-2">
+                <span class="badge bg-white text-dark border fw-normal pe-1">Samsung <i class="bi bi-x text-muted ms-1"></i></span>
+                <span class="badge bg-white text-dark border fw-normal pe-1">Apple <i class="bi bi-x text-muted ms-1"></i></span>
+                <a href="#" class="small text-brand-blue text-decoration-underline">Clear all filter</a>
+            </div>
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <div class="col">
+                            <div class="card-product-grid h-100 d-flex flex-column">
+                                <a href="/Products/Details/@item.Id" class="img-wrap">
+                                    <img src="@(string.IsNullOrEmpty(item.ImageUrl) ? "https://via.placeholder.com/300" : item.ImageUrl)" alt="@item.Name">
+                                    <button class="btn btn-wishlist shadow-sm"><i class="bi bi-heart-fill text-brand-blue"></i></button>
+                                </a>
+                                <div class="info-wrap flex-grow-1 d-flex flex-column">
+                                    <div class="mb-2">
+                                        <span class="price-new">$@item.Price.ToString("0.00")</span>
+                                        @if (item.OldPrice.HasValue)
+                                        {
+                                            <span class="price-old small">$@item.OldPrice.Value.ToString("0.00")</span>
+                                        }
+                                    </div>
+                                    <div class="mb-2 rating-stars">
+                                        @for (int i = 0; i < 5; i++)
+                                        {
+                                            if (i < Math.Floor(item.Rating))
+                                            {
+                                                <i class="bi bi-star-fill"></i>
+                                            }
+                                            else
+                                            {
+
+                                                <i class="bi bi-star-fill text-muted opacity-25"></i>
+                                            }
+                                        }
+                                        <span class="text-muted small ms-2">@item.Rating</span>
+                                    </div>
+                                    <h4 class="title mb-2">
+                                        <a href="/Products/Details/@item.Id" class="text-dark text-decoration-none">@item.Name</a>
+                                    </h4>
+                                    <p class="text-muted small mb-0 text-truncate">@item.ShortDescription</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12 text-center py-5">
+                        <h3>No products found in this category.</h3>
+                    </div>
+                }
+            </div>
+
+            <nav aria-label="Page navigation" class="mt-5 d-flex justify-content-end">
+                <ul class="pagination mb-0">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1"><i class="bi bi-chevron-left"></i></a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a>
+                    </li>
+                </ul>
+            </nav>
+
+        </main>
+    </div>
+</div>
