@@ -2,85 +2,63 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using ShopHub.Models;
-using ShopHub.Models; // Update to your actual namespace
+using ShopHub.Services;
 
 namespace ShopHub.Controllers
 {
     public class ProductsController : Controller
     {
-        // TEMPORARY: Mock Data to make the UI work immediately without a Database.
-        // In Step 3, we will replace this with your actual Database context.
-        private static readonly List<ProductViewModel> _products = new List<ProductViewModel>
+        private readonly MongoDbService _mongoService;
+        public ProductsController(MongoDbService mongoService)
         {
-            new ProductViewModel {
-                Id = 1,
-                Name = "Canon Camera EOS 2000, Black 10x zoom",
-                Price = 998.00m,
-                OldPrice = 1128.00m,
-                Rating = 4.5,
-                Category = "Electronics",
-                ImageUrl = "https://via.placeholder.com/300",
-                ShortDescription = "Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
-                FullDescription = "<p>Full details about the Canon camera...</p>",
-                InStock = true,
-                ReviewsCount = 154
-            },
-            new ProductViewModel {
-                Id = 2,
-                Name = "GoPro HERO6 4K Action Camera - Black",
-                Price = 998.00m,
-                Rating = 5.0,
-                Category = "Electronics",
-                ImageUrl = "https://via.placeholder.com/300",
-                ShortDescription = "Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
-                FullDescription = "<p>Full details about GoPro...</p>",
-                InStock = true,
-                ReviewsCount = 102
-            },
-            new ProductViewModel {
-                Id = 3,
-                Name = "Mens Long Sleeve T-shirt Cotton Base Layer",
-                Price = 98.00m,
-                Category = "Clothing",
-                ImageUrl = "https://via.placeholder.com/300",
-                ShortDescription = "Great for winter.",
-                FullDescription = "<p>Cotton material, very comfortable...</p>",
-                InStock = true,
-                ReviewsCount = 32
-            }
-        };
-
-        // GET: /Products?searchQuery=camera&category=Electronics
-        public IActionResult Index(string searchQuery, string category)
-        {
-            var products = _products.AsQueryable();
-
-            // 1. Handle Search Logic (Week 2 Req)
-            if (!string.IsNullOrEmpty(searchQuery))
-            {
-                products = products.Where(p => p.Name.Contains(searchQuery, System.StringComparison.OrdinalIgnoreCase));
-            }
-
-            // 2. Handle Category Filtering
-            if (!string.IsNullOrEmpty(category) && category != "All category")
-            {
-                products = products.Where(p => p.Category.Equals(category, System.StringComparison.OrdinalIgnoreCase));
-            }
-
-            return View(products.ToList());
+            _mongoService = mongoService;
         }
 
-        // GET: /Products/Details/5
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Index(string searchQuery, string category)
         {
-            var product = _products.FirstOrDefault(p => p.Id == id);
-
-            if (product == null)
+     
+            if (string.IsNullOrEmpty(searchQuery) && (string.IsNullOrEmpty(category) || category == "All category"))
             {
-                return NotFound();
+                var products = await _mongoService.SearchProductsAsync(searchQuery, category);
+                return View(products);
             }
+            else
+            {
+                var products = await _mongoService.SearchProductsAsync(searchQuery, category);
+                return View(products);
+            }
+        }
+
+        public async Task<IActionResult> Details(string id) 
+        {
+            if (string.IsNullOrEmpty(id)) return NotFound();
+
+            var product = await _mongoService.GetProductByIdAsync(id);
+
+            if (product == null) return NotFound();
 
             return View(product);
+        }
+
+        public async Task<IActionResult> SeedData()
+        {
+            var existing = await _mongoService.GetProductsAsync();
+            if (existing.Count == 0)
+            {
+                var sampleProducts = new List<ProductViewModel>
+                {
+                    new ProductViewModel { Name = "Canon Camera EOS 2000", Price = 998.00m, Category = "Electronics", ImageUrl = "https://via.placeholder.com/300", ShortDescription = "High quality camera...", Rating = 4.5, ReviewsCount = 154, InStock = true },
+                    new ProductViewModel { Name = "GoPro HERO6 4K", Price = 400.00m, Category = "Electronics", ImageUrl = "https://via.placeholder.com/300", ShortDescription = "Action camera...", Rating = 5.0, ReviewsCount = 100, InStock = true },
+                    new ProductViewModel { Name = "Men's T-Shirt", Price = 15.00m, Category = "Clothing", ImageUrl = "https://via.placeholder.com/300", ShortDescription = "Cotton shirt...", Rating = 3.5, ReviewsCount = 20, InStock = true }
+                };
+
+                foreach (var p in sampleProducts)
+                {
+                    await _mongoService.CreateProductAsync(p);
+                }
+                return Content("Database seeded successfully!");
+            }
+            return Content("Database already has data.");
         }
     }
 }

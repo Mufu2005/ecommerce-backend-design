@@ -17,12 +17,17 @@
 
             <form class="flex-grow-1 d-flex search-group" action="/Products" method="get" style="max-width: 600px;">
                 <div class="input-group">
-                    <select class="form-select bg-light">
-                        <option selected>All category</option>
-                        <option>Electronics</option>
-                        <option>Clothes</option>
+                    <select class="form-select bg-light" name="category">
+                        <option value="">All category</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Home">Home</option>
                     </select>
-                    <input type="text" class="form-control border-start-0 border-end-0" placeholder="Search products..." name="searchQuery">
+
+                    <input type="text" class="form-control border-start-0 border-end-0"
+                           placeholder="Search products..."
+                           name="searchQuery">
+
                     <button class="btn btn-primary px-4" type="submit">Search</button>
                 </div>
             </form>
