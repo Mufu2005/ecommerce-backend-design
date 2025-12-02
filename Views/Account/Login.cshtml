@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-5">
+                    <h3 class="fw-bold text-center mb-4">Welcome back</h3>
+
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.Error</div>
+                    }
+
+                    <form asp-action="Login" method="post">
+                        <div class="mb-3">
+                            <label class="form-label text-muted">Email</label>
+                            <input type="email" name="email" class="form-control" required placeholder="name@example.com">
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-muted">Password</label>
+                            <input type="password" name="password" class="form-control" required placeholder="********">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-3">Sign In</button>
+
+                        <div class="text-center">
+                            <span class="text-muted">Don't have an account? </span>
+                            <a href="/Account/Register" class="text-decoration-none fw-bold">Register</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

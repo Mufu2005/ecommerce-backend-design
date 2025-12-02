@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ShopHub.Models;
 using ShopHub.Services;
@@ -59,6 +60,24 @@ namespace ShopHub.Controllers
                 return Content("Database seeded successfully!");
             }
             return Content("Database already has data.");
+        }
+
+        [Authorize] 
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Create(ProductViewModel product)
+        {
+            if (ModelState.IsValid)
+            {
+                await _mongoService.CreateProductAsync(product);
+                return RedirectToAction("Index");
+            }
+            return View(product);
         }
     }
 }

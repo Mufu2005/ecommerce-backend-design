@@ -33,10 +33,28 @@
             </form>
 
             <div class="d-flex gap-3 ms-auto">
-                <a href="#" class="nav-icon-link"><i class="bi bi-person-fill"></i> Profile</a>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <a href="#" class="nav-icon-link text-primary">
+                        <i class="bi bi-person-fill"></i> @User.Claims.FirstOrDefault(c => c.Type == "FullName")?.Value
+                    </a>
+                    <a href="/Account/Logout" class="nav-icon-link">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                }
+                else
+                {
+                    <a href="/Account/Login" class="nav-icon-link">
+                        <i class="bi bi-person"></i> Login
+                    </a>
+                    <a href="/Account/Register" class="nav-icon-link">
+                        <i class="bi bi-person-plus"></i> Register
+                    </a>
+                }
+
                 <a href="#" class="nav-icon-link"><i class="bi bi-chat-dots-fill"></i> Message</a>
                 <a href="#" class="nav-icon-link"><i class="bi bi-heart-fill"></i> Orders</a>
-                <a href="#" class="nav-icon-link"><i class="bi bi-cart-fill"></i> My cart</a>
+                <a href="/Cart" class="nav-icon-link"><i class="bi bi-cart-fill"></i> My cart</a>
             </div>
         </div>
 

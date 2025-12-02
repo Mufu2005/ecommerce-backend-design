@@ -6,6 +6,7 @@ namespace ShopHub.Services
     public class MongoDbService
     {
         private readonly IMongoCollection<ProductViewModel> _productsCollection;
+        private readonly IMongoCollection<User> _usersCollection;
 
         public MongoDbService(IConfiguration config)
         {
@@ -13,6 +14,7 @@ namespace ShopHub.Services
             var mongoDatabase = mongoClient.GetDatabase(config["MongoDB:DatabaseName"]);
 
             _productsCollection = mongoDatabase.GetCollection<ProductViewModel>(config["MongoDB:CollectionName"]);
+            _usersCollection = mongoDatabase.GetCollection<User>("Users");
         }
 
         public async Task<List<ProductViewModel>> GetProductsAsync() =>
@@ -41,6 +43,20 @@ namespace ShopHub.Services
             }
 
             return await _productsCollection.Find(filter).ToListAsync();
+        }
+
+        public async Task CreateUserAsync(User user)
+        {
+            await _usersCollection.InsertOneAsync(user);
+        }
+
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            return await _usersCollection.Find(u => u.Email == email).FirstOrDefaultAsync();
+        }
+        public async Task CreateProductAsync(ProductViewModel product)
+        {
+            await _productsCollection.InsertOneAsync(product);
         }
     }
 }
