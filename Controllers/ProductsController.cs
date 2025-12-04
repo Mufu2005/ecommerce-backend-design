@@ -41,28 +41,28 @@ namespace ShopHub.Controllers
             return View(product);
         }
 
-        public async Task<IActionResult> SeedData()
-        {
-            var existing = await _mongoService.GetProductsAsync();
-            if (existing.Count == 0)
-            {
-                var sampleProducts = new List<ProductViewModel>
-                {
-                    new ProductViewModel { Name = "Canon Camera EOS 2000", Price = 998.00m, Category = "Electronics", ImageUrl = "https://via.placeholder.com/300", ShortDescription = "High quality camera...", Rating = 4.5, ReviewsCount = 154, InStock = true },
-                    new ProductViewModel { Name = "GoPro HERO6 4K", Price = 400.00m, Category = "Electronics", ImageUrl = "https://via.placeholder.com/300", ShortDescription = "Action camera...", Rating = 5.0, ReviewsCount = 100, InStock = true },
-                    new ProductViewModel { Name = "Men's T-Shirt", Price = 15.00m, Category = "Clothing", ImageUrl = "https://via.placeholder.com/300", ShortDescription = "Cotton shirt...", Rating = 3.5, ReviewsCount = 20, InStock = true }
-                };
+        //public async Task<IActionResult> SeedData()
+        //{
+        //    var existing = await _mongoService.GetProductsAsync();
+        //    if (existing.Count == 0)
+        //    {
+        //        var sampleProducts = new List<ProductViewModel>
+        //        {
+        //            new ProductViewModel { Name = "Canon Camera EOS 2000", Price = 998.00m, Category = "Electronics", ImageUrl = "https://via.placeholder.com/300", ShortDescription = "High quality camera...", Rating = 4.5, ReviewsCount = 154, InStock = true },
+        //            new ProductViewModel { Name = "GoPro HERO6 4K", Price = 400.00m, Category = "Electronics", ImageUrl = "https://via.placeholder.com/300", ShortDescription = "Action camera...", Rating = 5.0, ReviewsCount = 100, InStock = true },
+        //            new ProductViewModel { Name = "Men's T-Shirt", Price = 15.00m, Category = "Clothing", ImageUrl = "https://via.placeholder.com/300", ShortDescription = "Cotton shirt...", Rating = 3.5, ReviewsCount = 20, InStock = true }
+        //        };
 
-                foreach (var p in sampleProducts)
-                {
-                    await _mongoService.CreateProductAsync(p);
-                }
-                return Content("Database seeded successfully!");
-            }
-            return Content("Database already has data.");
-        }
+        //        foreach (var p in sampleProducts)
+        //        {
+        //            await _mongoService.CreateProductAsync(p);
+        //        }
+        //        return Content("Database seeded successfully!");
+        //    }
+        //    return Content("Database already has data.");
+        //}
 
-        [Authorize] 
+        [Authorize] // <--- This checks if user is logged in
         public IActionResult Create()
         {
             return View();
@@ -70,14 +70,23 @@ namespace ShopHub.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Create(ProductViewModel product)
+        public async Task<IActionResult> Create(ProductViewModel model)
         {
             if (ModelState.IsValid)
             {
-                await _mongoService.CreateProductAsync(product);
+                model.Id = null;
+                model.Rating = 4.5; 
+                model.ReviewsCount = 0;
+                model.InStock = true;
+
+                if (string.IsNullOrEmpty(model.Category)) model.Category = "Electronics";
+                if (string.IsNullOrEmpty(model.Brand)) model.Brand = "Generic"; // Default brand
+                if (string.IsNullOrEmpty(model.SupplierName)) model.SupplierName = "ShopHub";
+
+                await _mongoService.CreateProductAsync(model);
                 return RedirectToAction("Index");
             }
-            return View(product);
+            return View(model);
         }
     }
 }

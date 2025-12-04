@@ -8,6 +8,7 @@ namespace ShopHub.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
+
         public string Name { get; set; }
         public string ShortDescription { get; set; }
         public string FullDescription { get; set; }
@@ -17,8 +18,12 @@ namespace ShopHub.Models
         public int ReviewsCount { get; set; }
         public string ImageUrl { get; set; }
         public string Category { get; set; }
-        public string Brand { get; set; }
+
+        // --- FIX IS HERE: Added '?' to make these optional ---
+        public string? Brand { get; set; }
+        public string? SupplierName { get; set; }
+        // ----------------------------------------------------
+
         public bool InStock { get; set; }
-        public string SupplierName { get; set; }
     }
 }

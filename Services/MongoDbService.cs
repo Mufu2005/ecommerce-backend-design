@@ -17,8 +17,21 @@ namespace ShopHub.Services
             _usersCollection = mongoDatabase.GetCollection<User>("Users");
         }
 
-        public async Task<List<ProductViewModel>> GetProductsAsync() =>
-            await _productsCollection.Find(_ => true).ToListAsync();
+        public async Task<(List<ProductViewModel> products, long totalCount)> GetProductsAsync(int page, int pageSize)
+        {
+            var filter = Builders<ProductViewModel>.Filter.Empty;
+
+            // Count all items first (for calculating total pages)
+            var totalCount = await _productsCollection.CountDocumentsAsync(filter);
+
+            // Get specific chunk
+            var products = await _productsCollection.Find(filter)
+                .Skip((page - 1) * pageSize)
+                .Limit(pageSize)
+                .ToListAsync();
+
+            return (products, totalCount);
+        }
 
         public async Task<ProductViewModel?> GetProductByIdAsync(string id) =>
             await _productsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
@@ -54,9 +67,6 @@ namespace ShopHub.Services
         {
             return await _usersCollection.Find(u => u.Email == email).FirstOrDefaultAsync();
         }
-        public async Task CreateProductAsync(ProductViewModel product)
-        {
-            await _productsCollection.InsertOneAsync(product);
-        }
+       
     }
 }

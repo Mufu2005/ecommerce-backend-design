@@ -9,8 +9,8 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 small">
                 <li class="breadcrumb-item"><a href="/" class="text-muted">Home</a></li>
-                <li class="breadcrumb-item"><a href="#" class="text-muted">Clothings</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Men's wear</li>
+                <li class="breadcrumb-item"><a href="#" class="text-muted">Shop</a></li>
+                <li class="breadcrumb-item active" aria-current="page">All Products</li>
             </ol>
         </nav>
     </div>
@@ -25,9 +25,10 @@
                 </button>
                 <div class="collapse show mt-3" id="collapseCat">
                     <ul class="list-unstyled small text-muted d-flex flex-column gap-2">
-                        <li><a href="#" class="text-muted fw-bold">Mobile accessory</a></li>
-                        <li><a href="#" class="text-muted">Electronics</a></li>
-                        <li><a href="#" class="text-muted">Smartphones</a></li>
+                        <li><a href="/Products?category=Electronics" class="text-muted fw-bold">Electronics</a></li>
+                        <li><a href="/Products?category=Clothing" class="text-muted">Clothing</a></li>
+                        <li><a href="/Products?category=Home" class="text-muted">Home</a></li>
+                        <li><a href="/Products?category=Automobiles" class="text-muted">Automobiles</a></li>
                     </ul>
                 </div>
             </div>
@@ -45,19 +46,21 @@
                         <input class="form-check-input" type="checkbox" id="brand2">
                         <label class="form-check-label small" for="brand2">Apple</label>
                     </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="brand3">
-                        <label class="form-check-label small" for="brand3">Huawei</label>
-                    </div>
                 </div>
             </div>
-        </aside>
 
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="d-grid mt-4">
+                    <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add New Product</a>
+                </div>
+            }
+        </aside>
 
         <main class="col-lg-9">
             <div class="card mb-4 border-brand-border-color">
                 <div class="card-body py-2 d-flex align-items-center justify-content-between flex-wrap gap-2">
-                    <span class="small text-muted">12,911 items in <strong>Mobile accessory</strong></span>
+                    <span class="small text-muted">Showing results</span>
                     <div class="d-flex align-items-center gap-2">
                         <div class="form-check mb-0 small me-2">
                             <input class="form-check-input" type="checkbox" id="verified">
@@ -76,9 +79,7 @@
             </div>
 
             <div class="mb-4 d-flex flex-wrap gap-2">
-                <span class="badge bg-white text-dark border fw-normal pe-1">Samsung <i class="bi bi-x text-muted ms-1"></i></span>
-                <span class="badge bg-white text-dark border fw-normal pe-1">Apple <i class="bi bi-x text-muted ms-1"></i></span>
-                <a href="#" class="small text-brand-blue text-decoration-underline">Clear all filter</a>
+                <a href="/Products" class="small text-brand-blue text-decoration-underline">Clear all filters</a>
             </div>
 
             <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
@@ -109,7 +110,6 @@
                                             }
                                             else
                                             {
-
                                                 <i class="bi bi-star-fill text-muted opacity-25"></i>
                                             }
                                         }
@@ -137,19 +137,31 @@
                 }
             </div>
 
-            <nav aria-label="Page navigation" class="mt-5 d-flex justify-content-end">
-                <ul class="pagination mb-0">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1"><i class="bi bi-chevron-left"></i></a>
-                    </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a>
-                    </li>
-                </ul>
-            </nav>
+            @if (ViewBag.TotalPages > 1)
+            {
+                <nav aria-label="Page navigation" class="mt-5 d-flex justify-content-end">
+                    <ul class="pagination mb-0">
+                        <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                            <a class="page-link" href="/Products?page=@(ViewBag.CurrentPage - 1)" tabindex="-1">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </li>
+
+                        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                        {
+                            <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                                <a class="page-link" href="/Products?page=@i">@i</a>
+                            </li>
+                        }
+
+                        <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                            <a class="page-link" href="/Products?page=@(ViewBag.CurrentPage + 1)">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            }
 
         </main>
     </div>

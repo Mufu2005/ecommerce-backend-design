@@ -1,13 +1,5 @@
-using AspNetCore.Identity.MongoDbCore.Extensions;
-using AspNetCore.Identity.MongoDbCore.Infrastructure;
-using AspNetCore.Identity.MongoDbCore.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using ShopHub.Data;
-using ShopHub.Models;
 using ShopHub.Services;
-
 
 namespace ShopHub
 {
@@ -17,42 +9,23 @@ namespace ShopHub
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var mongoSettings = builder.Configuration.GetSection("MongoDB");
-            var connectionString = mongoSettings["ConnectionString"];
-            var databaseName = mongoSettings["DatabaseName"];
-            builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
-
-            var identityConfiguration = new MongoDbIdentityConfiguration
-            {
-                MongoDbSettings = new MongoDbSettings
-                {
-                    ConnectionString = connectionString,
-                    DatabaseName = databaseName
-                },
-                IdentityOptionsAction = options =>
-                {
-                    options.Password.RequireDigit = false;
-                    options.Password.RequiredLength = 6;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequireLowercase = false;
-                }
-            };
-
-
-            builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMongoDB(connectionString, databaseName));
-
-            // Add services to the container.
+            // 1. Add Controllers with Views
             builder.Services.AddControllersWithViews();
+
+            // 2. Register your Custom MongoDB Service
             builder.Services.AddSingleton<MongoDbService>();
 
+            // 3. Add Cookie Authentication (Simple & Effective)
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/Account/Login";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-    });
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Account/Login";
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                    // CRITICAL: These settings ensure the cookie works on localhost
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.IsEssential = true;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                });
 
             var app = builder.Build();
 
@@ -60,7 +33,6 @@ namespace ShopHub
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -69,10 +41,17 @@ namespace ShopHub
 
             app.UseRouting();
 
+            // ---------------------------------------------------------
+            // THE FIX IS HERE: ORDER MATTERS!
+            // ---------------------------------------------------------
+
+            // 1. Check WHO they are first
+            app.UseAuthentication();
+
+            // 2. Then Check WHAT they can do
             app.UseAuthorization();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            // ---------------------------------------------------------
 
             app.MapControllerRoute(
                 name: "default",

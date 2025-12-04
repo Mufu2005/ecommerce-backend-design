@@ -42,10 +42,15 @@ namespace YourNamespace.Controllers
             return RedirectToAction("Login");
         }
 
-        public IActionResult Login() => View();
+        public IActionResult Login(string returnUrl = null)
+        {
+            // Save the URL so we can use it after they type their password
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+        }
 
         [HttpPost]
-        public async Task<IActionResult> Login(string email, string password)
+        public async Task<IActionResult> Login(string email, string password, string returnUrl = null)
         {
             var user = await _mongoService.GetUserByEmailAsync(email);
 
@@ -66,9 +71,14 @@ namespace YourNamespace.Controllers
             var authProperties = new AuthenticationProperties { IsPersistent = true };
 
             await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity),
-                authProperties);
+                CookieAuthenticationDefaults.AuthenticationScheme, // Must match Program.cs
+    new ClaimsPrincipal(claimsIdentity),
+    new AuthenticationProperties { IsPersistent = true });
+
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
 
             return RedirectToAction("Index", "Home");
         }
